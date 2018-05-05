@@ -7,6 +7,7 @@ const expressHandlebars = require('express-handlebars');
 const router = require('./router.js');
 const socketio = require('socket.io');
 const sockets = require('./sockets.js');
+const session = require('express-session');
 
 // add port for the app to listen on
 const PORT = process.env.PORT || process.env.NODE_PORT || 3000;

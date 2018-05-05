@@ -1,5 +1,5 @@
 //SECTION: React Components
-const TeameNameListItemComponent = props => {
+const TeamNameListItemComponent = props => {
 	let items = [];
 
 	Object.keys(props.teamNames).forEach(teamName => {
@@ -15,9 +15,13 @@ const TeameNameListItemComponent = props => {
 
 const TeamNameListComponent = props => {
 	return React.createElement(
-		"ul",
+		"div",
 		null,
-		React.createElement(TeameNameListItemComponent, { teamNames: teams })
+		React.createElement(
+			"ul",
+			null,
+			React.createElement(TeamNameListItemComponent, { teamNames: teams })
+		)
 	);
 };
 
@@ -29,6 +33,16 @@ const HostPageComponent = props => {
 			"div",
 			{ id: "teamNames" },
 			React.createElement(TeamNameListComponent, null)
+		),
+		React.createElement(
+			"span",
+			{ id: "timer" },
+			"00:00:00"
+		),
+		React.createElement(
+			"button",
+			{ id: "timerButton", onClick: hostStartTimer },
+			"Start Timer"
 		)
 	);
 };
@@ -43,14 +57,48 @@ const ClientButtonComponent = props => {
 
 const ClientConfirmationComponent = props => {
 	return React.createElement(
-		"h1",
+		"div",
 		null,
-		"Your team finished your Fifth in ",
-		`${props.time}`
+		React.createElement(
+			"h1",
+			null,
+			"Your team finished your Fifth in ",
+			`${props.time}`
+		),
+		React.createElement(
+			"button",
+			{ onClick: clientRepealTime },
+			"Take it back"
+		)
 	);
 };
 
 //SECTION: Methods for rendering components
+let timer = null;
+
+const hostStartTimer = () => {
+	let sec = 0;
+	if (document.getElementById('timerButton').innerHTML === "Start Timer") {
+		document.getElementById('timerButton').innerHTML = "Stop Timer";
+		timer = setInterval(function () {
+			const pad = val => {
+				return val > 9 ? val : "0" + val;
+			};
+			const seconds = pad(++sec % 60);
+			const minutes = pad(parseInt(sec / 60, 10));
+			const hours = pad(parseInt(sec / 3600, 10));
+
+			document.getElementById('timer').innerHTML = `${hours}:${minutes}:${seconds}`;
+		}, 1000);
+	} else {
+		clearInterval(timer);
+		Object.keys(teams).forEach(v => teams[v] = "00:00:00");
+		createTeamNameList();
+		document.getElementById('timerButton').innerHTML = "Start Timer";
+		document.getElementById('timer').innerHTML = "00:00:00";
+	}
+};
+
 const createTeamNameList = () => {
 	ReactDOM.render(React.createElement(TeamNameListComponent, null), document.querySelector('#teamNames'));
 };
@@ -75,15 +123,21 @@ const createHostOrClientPage = () => {
 	}
 };
 
+const clientRepealTime = e => {
+	socket.emit('clientSubmittedTime', { time: "00:00:00", name: teamName });
+
+	createClientButton();
+};
+
 //SECTION: App logic
 const clientSubmitTime = e => {
 	e.preventDefault();
-
-	const timestamp = new Date();
-
-	socket.emit('clientSubmittedTime', { time: timestamp, name: teamName });
-
-	createClientConfirmation(timestamp);
+	socket.emit('clientSubmittedTime', { time: "currTime", name: teamName });
+	socket.on('submissionSuccess', function (data) {
+		console.log("something");
+		const timestamp = data.time;
+		createClientConfirmation(timestamp);
+	});
 };
 let teams = {};
 
@@ -99,19 +153,43 @@ const onUserJoined = sock => {
 	const socket = sock;
 
 	socket.on('userJoined', data => {
-		teams[data.name] = 0;
+		teams[data.name] = "00:00:00";
 		console.dir(teams);
 		createTeamNameList();
+	});
+};
+
+const onStartTimer = sock => {
+	const socket = sock;
+
+	socket.on('startTimer', () => {
+		let sec = 0;
+		const pad = val => {
+			return val > 9 ? val : "0" + val;
+		};
+		console.dir("whatever");
+		setInterval(function () {
+			const seconds = pad(++sec % 60);
+			const minutes = pad(parseInt(sec / 60, 10));
+			const hours = pad(parseInt(sec / 3600, 10));
+
+			document.getElementById('timer').innerHTML = `${hours} : ${minutes} : ${seconds}`;
+		}, 1000);
 	});
 };
 
 //host method for updating team times
 const onClientSubmittedTime = sock => {
 	const socket = sock;
-
+	console.dir("bruh");
 	socket.on('clientSubmittedTime', data => {
-		teams[data.name] = data.time;
+		if (data.time === "currTime") {
+			teams[data.name] = document.getElementById('timer').innerHTML;
+		} else {
+			teams[data.name] = data.time;
+		}
 		createTeamNameList();
+		socket.emit('submissionSuccess', { time: teams[data.name] });
 	});
 };
 
@@ -121,6 +199,7 @@ const hostEvents = sock => {
 
 	onUserJoined(socket);
 	onClientSubmittedTime(socket);
+	onStartTimer(socket);
 };
 //React Component for rendering the login form on the home page
 const RoomLoginComponent = props => {
