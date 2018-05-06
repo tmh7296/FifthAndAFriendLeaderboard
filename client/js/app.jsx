@@ -6,7 +6,7 @@ const styles = {
 		border: "1px solid"
 	},
 	list : {
-		width: "40%",
+		width: "80%",
 		display: "flex",
 		justifyContent: "center"
 	},
@@ -61,7 +61,7 @@ const TeamNameListComponent = props => {
 const HostPageComponent = props => {
 	return (
 		<div>
-			<div id="teamNames" style={styles.teams}>
+			<div id="teamNames" >
 				<TeamNameListComponent />
 			</div>
             <div style={styles.buttonContainer}>
