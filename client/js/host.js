@@ -38,8 +38,7 @@ const onStartTimer = sock => {
 //host method for updating team times
 const onClientSubmittedTime = sock => {
 	const socket = sock;
-	console.dir("bruh");
-	socket.on('clientSubmittedTime', data => {
+	socket.on('clientSubmittedTime', (data) => {
 		if (data.time === "currTime") {
             teams[data.name] = document.getElementById('timer').innerHTML;
         }
@@ -47,7 +46,7 @@ const onClientSubmittedTime = sock => {
 			teams[data.name] = data.time;
 		}
 		createTeamNameList();
-		socket.emit('submissionSuccess', { time: teams[data.name] });
+		socket.emit('submittedTime', teams[data.name]);
 	});
 }
 

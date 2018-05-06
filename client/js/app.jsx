@@ -1,48 +1,90 @@
 //SECTION: React Components
-const TeamNameListItemComponent = props => {
+const styles = {
+	teams : {
+    	display: "flex",
+    	justifyContent: "center",
+		border: "1px solid"
+	},
+	list : {
+		width: "40%",
+		display: "flex",
+		justifyContent: "center"
+	},
+	buttonContainer : {
+		display:"flex",
+		justifyContent: "center"
+	}
+};
+
+const RankedTeamNameListItemComponent = props => {
 	let items = [];
 	
 	Object.keys(props.teamNames).forEach(teamName => {
-		items.push(<li>{`${teamName}: ${props.teamNames[teamName]}`}</li>)
+		if (props.teamNames[teamName] !== "00:00:00"){
+            items.push(<li>{`${teamName}: ${props.teamNames[teamName]}`}</li>)
+		}
+
 	});
 	
 	return items;
 };
 
+const TeamNameListItemComponent = props => {
+    let items = [];
+
+    Object.keys(props.teamNames).forEach(teamName => {
+    	items.push(<li>{`${teamName}`}</li>)
+    });
+
+    return items;
+};
+
 const TeamNameListComponent = props => {
 	return (
-		<div>
-			<ul>
-				<TeamNameListItemComponent teamNames={teams} />
-			</ul>
-		</div>
+		<React.Fragment>
+			<div style={styles.list}>
+				<h2>Joined Teams</h2>
+				<ul id="joinedTeams">
+					<TeamNameListItemComponent teamNames={teams} />
+				</ul>
+			</div>
+			<div style={styles.list}>
+				<h2>Leaderboard</h2>
+				<ul id="rankedTeams">
+					<RankedTeamNameListItemComponent teamNames={teams}/>
+				</ul>
+			</div>
+		</React.Fragment>
 	);
 };
 
 const HostPageComponent = props => {
 	return (
 		<div>
-			<div id="teamNames">
+			<div id="teamNames" style={styles.teams}>
 				<TeamNameListComponent />
 			</div>
-            <span id="timer">
-				00:00:00
-            </span>
-            <button id="timerButton" onClick={hostStartTimer}>Start Timer</button>
+            <div style={styles.buttonContainer}>
+				<h1 id="timer">
+					00:00:00
+				</h1>
+            	<button id="timerButton" onClick={hostStartTimer}>Start Timer</button>
+			</div>
 		</div>
 	);
 };
 
 const ClientButtonComponent = props => {
 	return (
-		<button id="submitTime" onClick={clientSubmitTime}>Finished the Fifth!</button>
+		<button id="submitTime" onClick={clientSubmitTime} type="button" class="btn btn-danger btn-lg">Finished the Fifth!</button>
 	);
 };
 
 const ClientConfirmationComponent = props => {
 	return (
 		<div>
-			<h1>Your team finished your Fifth in {`${props.time}`}</h1>
+			{/*<h1>Your team finished your Fifth in {`${props.time}`}</h1>*/}
+			<h1>Congratulations on making it to the finish line!</h1>
 			<button onClick={clientRepealTime}>Take it back</button>
 		</div>
 	);
@@ -118,10 +160,9 @@ const clientRepealTime = e => {
 //SECTION: App logic
 const clientSubmitTime = e => {
 	e.preventDefault();
-	socket.emit('clientSubmittedTime', {time: "currTime", name: teamName});
-	socket.on('submissionSuccess', function(data){
-		console.log("something");
-		const timestamp = data.time;
-        createClientConfirmation(timestamp);
-	});
+    socket.emit('clientSubmittedTime', {time: "currTime", name: teamName});
+    socket.on('submittedTime', function(data){
+        console.log(data);
+    });
+	createClientConfirmation();
 };

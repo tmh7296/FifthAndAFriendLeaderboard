@@ -1,4 +1,37 @@
 //SECTION: React Components
+const styles = {
+	teams: {
+		display: "flex",
+		justifyContent: "center",
+		border: "1px solid"
+	},
+	list: {
+		width: "40%",
+		display: "flex",
+		justifyContent: "center"
+	},
+	buttonContainer: {
+		display: "flex",
+		justifyContent: "center"
+	}
+};
+
+const RankedTeamNameListItemComponent = props => {
+	let items = [];
+
+	Object.keys(props.teamNames).forEach(teamName => {
+		if (props.teamNames[teamName] !== "00:00:00") {
+			items.push(React.createElement(
+				"li",
+				null,
+				`${teamName}: ${props.teamNames[teamName]}`
+			));
+		}
+	});
+
+	return items;
+};
+
 const TeamNameListItemComponent = props => {
 	let items = [];
 
@@ -6,7 +39,7 @@ const TeamNameListItemComponent = props => {
 		items.push(React.createElement(
 			"li",
 			null,
-			`${teamName}: ${props.teamNames[teamName]}`
+			`${teamName}`
 		));
 	});
 
@@ -15,12 +48,35 @@ const TeamNameListItemComponent = props => {
 
 const TeamNameListComponent = props => {
 	return React.createElement(
-		"div",
+		React.Fragment,
 		null,
 		React.createElement(
-			"ul",
-			null,
-			React.createElement(TeamNameListItemComponent, { teamNames: teams })
+			"div",
+			{ style: styles.list },
+			React.createElement(
+				"h2",
+				null,
+				"Joined Teams"
+			),
+			React.createElement(
+				"ul",
+				{ id: "joinedTeams" },
+				React.createElement(TeamNameListItemComponent, { teamNames: teams })
+			)
+		),
+		React.createElement(
+			"div",
+			{ style: styles.list },
+			React.createElement(
+				"h2",
+				null,
+				"Leaderboard"
+			),
+			React.createElement(
+				"ul",
+				{ id: "rankedTeams" },
+				React.createElement(RankedTeamNameListItemComponent, { teamNames: teams })
+			)
 		)
 	);
 };
@@ -31,18 +87,22 @@ const HostPageComponent = props => {
 		null,
 		React.createElement(
 			"div",
-			{ id: "teamNames" },
+			{ id: "teamNames", style: styles.teams },
 			React.createElement(TeamNameListComponent, null)
 		),
 		React.createElement(
-			"span",
-			{ id: "timer" },
-			"00:00:00"
-		),
-		React.createElement(
-			"button",
-			{ id: "timerButton", onClick: hostStartTimer },
-			"Start Timer"
+			"div",
+			{ style: styles.buttonContainer },
+			React.createElement(
+				"h1",
+				{ id: "timer" },
+				"00:00:00"
+			),
+			React.createElement(
+				"button",
+				{ id: "timerButton", onClick: hostStartTimer },
+				"Start Timer"
+			)
 		)
 	);
 };
@@ -50,7 +110,7 @@ const HostPageComponent = props => {
 const ClientButtonComponent = props => {
 	return React.createElement(
 		"button",
-		{ id: "submitTime", onClick: clientSubmitTime },
+		{ id: "submitTime", onClick: clientSubmitTime, type: "button", "class": "btn btn-danger btn-lg" },
 		"Finished the Fifth!"
 	);
 };
@@ -62,8 +122,7 @@ const ClientConfirmationComponent = props => {
 		React.createElement(
 			"h1",
 			null,
-			"Your team finished your Fifth in ",
-			`${props.time}`
+			"Congratulations on making it to the finish line!"
 		),
 		React.createElement(
 			"button",
@@ -133,11 +192,10 @@ const clientRepealTime = e => {
 const clientSubmitTime = e => {
 	e.preventDefault();
 	socket.emit('clientSubmittedTime', { time: "currTime", name: teamName });
-	socket.on('submissionSuccess', function (data) {
-		console.log("something");
-		const timestamp = data.time;
-		createClientConfirmation(timestamp);
+	socket.on('submittedTime', function (data) {
+		console.log(data);
 	});
+	createClientConfirmation();
 };
 let teams = {};
 
@@ -181,7 +239,6 @@ const onStartTimer = sock => {
 //host method for updating team times
 const onClientSubmittedTime = sock => {
 	const socket = sock;
-	console.dir("bruh");
 	socket.on('clientSubmittedTime', data => {
 		if (data.time === "currTime") {
 			teams[data.name] = document.getElementById('timer').innerHTML;
@@ -189,7 +246,7 @@ const onClientSubmittedTime = sock => {
 			teams[data.name] = data.time;
 		}
 		createTeamNameList();
-		socket.emit('submissionSuccess', { time: teams[data.name] });
+		socket.emit('submittedTime', teams[data.name]);
 	});
 };
 
