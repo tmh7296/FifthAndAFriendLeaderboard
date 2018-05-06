@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="3f75a6b4-346c-4f13-8ec6-94c6faef429c" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/client/js/app.jsx" afterPath="$PROJECT_DIR$/client/js/app.jsx" />
-      <change beforePath="$PROJECT_DIR$/views/home.handlebars" afterPath="$PROJECT_DIR$/views/home.handlebars" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -80,11 +79,11 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="app.jsx" pinned="false" current-in-tab="false">
+          <file leaf-file-name="app.jsx" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/client/js/app.jsx">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="144">
-                  <caret line="8" column="17" lean-forward="false" selection-start-line="8" selection-start-column="17" selection-end-line="8" selection-end-column="17" />
+                <state relative-caret-position="267">
+                  <caret line="78" column="94" lean-forward="false" selection-start-line="78" selection-start-column="94" selection-end-line="78" selection-end-column="94" />
                   <folding />
                 </state>
               </provider>
@@ -100,7 +99,7 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="home.handlebars" pinned="false" current-in-tab="true">
+          <file leaf-file-name="home.handlebars" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/views/home.handlebars">
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="234">
@@ -150,8 +149,8 @@
         <option value="$PROJECT_DIR$/src/sockets.js" />
         <option value="$PROJECT_DIR$/client/js/host.js" />
         <option value="$PROJECT_DIR$/client/css/host.css" />
-        <option value="$PROJECT_DIR$/client/js/app.jsx" />
         <option value="$PROJECT_DIR$/views/home.handlebars" />
+        <option value="$PROJECT_DIR$/client/js/app.jsx" />
       </list>
     </option>
   </component>
@@ -358,12 +357,12 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1525551604210</updated>
-      <workItem from="1525551605397" duration="15866000" />
+      <workItem from="1525551605397" duration="16085000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="15866000" />
+    <option name="totallyTimeSpent" value="16085000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1998" y="155" width="1920" height="1053" extended-state="6" />
@@ -500,18 +499,18 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/client/js/app.jsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="144">
-          <caret line="8" column="17" lean-forward="false" selection-start-line="8" selection-start-column="17" selection-end-line="8" selection-end-column="17" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/views/home.handlebars">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="234">
           <caret line="13" column="87" lean-forward="false" selection-start-line="13" selection-start-column="87" selection-end-line="13" selection-end-column="87" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/js/app.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="267">
+          <caret line="78" column="94" lean-forward="false" selection-start-line="78" selection-start-column="94" selection-end-line="78" selection-end-column="94" />
           <folding />
         </state>
       </provider>

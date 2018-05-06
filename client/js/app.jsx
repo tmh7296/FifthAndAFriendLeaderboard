@@ -76,7 +76,7 @@ const HostPageComponent = props => {
 
 const ClientButtonComponent = props => {
 	return (
-		<button id="submitTime" onClick={clientSubmitTime} type="button" class="btn btn-danger btn-lg">Finished the Fifth!</button>
+		<button id="submitTime" onClick={clientSubmitTime} type="button" class="btn btn-danger">Finished the Fifth!</button>
 	);
 };
 
